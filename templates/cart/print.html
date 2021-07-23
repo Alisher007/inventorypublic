@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">description</th>
+        <th scope="col">qty</th>
+        <th scope="col">gross wt</th>
+        <th scope="col">gross sale</th>
+        <th scope="col">VAT 5%</th>
+        <th scope="col">total</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for item in order.items.all %}
+        <tr>
+            <th scope="row">{{item.product.barcode}}</th>
+            <td>
+                {{ item.product.title }}
+            </td>
+            <td>
+                {{ item.quantity}}
+            </td>
+            <td>
+                {{ item.product.get_weight }}
+            </td>
+            <td>
+                ${{ item.get_total_item_price }}
+            </td>
+            <td>
+                ${{ item.get_tax }}
+            </td>
+            <td>
+                ${{ item.get_total_item_price_tax }}
+            </td>
+        </tr>
+        {% endfor %}
+      <tr>
+        <td colspan="2"></td>
+        <td>{{ order.get_qty }}</td>
+        <td>{{ order.get_weight }}</td>
+        <td>{{ order.get_subtotal }}</td>
+        <td>{{ order.get_tax }}</td>
+        <td>{{ order.get_total }}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="text-center">{{ total }}</td>
+        <td> <strong>Net Total</strong> </td>
+        <td>{{ order.get_total }}</td>
+      </tr>
+      {% for pay in order.pays.all %}
+      <tr>
+        <td colspan="6" class="text-center">{{pay.method}}</td>
+        <td>{{ pay.price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}

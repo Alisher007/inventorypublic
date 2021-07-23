@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a><span class="mx-2 mb-0">/</span>
+                <a href="{% url 'cart:summary' %}" class="text-black">Cart</a><span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Checkout</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section">
+    <div class="container">
+        {% if not request.user.is_authenticated %}
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="border p-4 rounded" role="alert">
+                    You are nearly finished with your order.
+                    To finalize your order, please <a>Login</a> or <a>Signup</a>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="90"
+                        aria-valuemin="0" aria-valuemax="100">90% complete</div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+
+            
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            {% if not customer %}
+                                <h3 class="text-black text-center"> Order</h3>
+                            {% else %}
+                                
+                                <h3 class="text-black text-center">{{customer.name}}'s Order</h3>
+                            {% endif %}
+                            <div class="p-3 p-lg-5">
+                                <table class="table site-block-order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                        <tr>
+                                            <td>
+                                                {{ item.product.title }}
+                                                <strong class="mx-2">x</strong> {{ item.quantity }}<br>
+                                                <small>discount %{{ item.discount }}</small>
+                                            </td>
+                                            <td>
+                                                ${{ item.get_total_original_item_price }}<br>
+                                                <small>- {{ item.get_discount_price }}</small>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td><strong>Subtotal</strong></td>
+                                            <td>${{ order.get_subtotal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>{{tax.name}} {{tax.percent}}%</strong></td>
+                                            <td>${{ order.get_tax }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong class="text-black font-weight-bold">Net Total</strong></td>
+                                            <td>
+                                                <strong class="text-black font-weight-bold">
+                                                    ${{ order.get_total }}
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong class="text-black font-weight-bold">Paid Total</strong></td>
+                                            <td>
+                                                <strong class="text-black font-weight-bold">
+                                                    - ${{ order.get_total_payment }}
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                                <a class="btn btn-outline-primary mr-3" href="{% url 'cart:payment-create' %}">Payment</a>
+                                <a class="btn btn-outline-success" href="{% url 'cart:checkout-confirm' %}">Done</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-sm-12">
+                    {% if payment %}
+
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h3 class="text-black text-center">Payment</h3>
+                            <div class="p-3 p-lg-5">
+                                <table class="table site-block-order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Method of payment</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pay in payment.all %}
+                                        <tr>
+                                            <td>
+                                                {{ pay.method }}
+                                            </td>
+                                            <td>
+                                                {{ pay.get_price }}
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-outline-primary" href="{{ pay.get_absolute_url }}">Edit</a>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-outline-danger" href="{{ pay.get_delete_url }}">Remove</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td><strong class="text-black font-weight-bold">Payment Total</strong></td>
+                                            <td>
+                                                <strong class="text-black font-weight-bold">
+                                                    ${{ order.get_total_payment }}
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                       
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a>
+                <span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Customer</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="row mt-3">
+                    {% if not customer %}
+                    <div class="col-md-12 text-center">
+                        <h2 class="h3 mt-3 text-black">Customer</h2>
+                        <br>
+                        <a class="btn btn-success" href="{% url 'cart:customer-create' %}">create customer </a>
+                    </div>
+                    {% else %}
+                    
+                    <div class="col-md-12">
+                        <h2 class="h3 mt-3 text-black text-center">Customer</h2>
+                        <div class="p-3 p-lg-5">
+                            <table class="table site-block-order-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            {{ customer.name }}
+                                        </td>
+                                        <td>
+                                            {{ customer.lastname}}
+                                        </td>
+                                        <td>
+                                            {{ customer.email}}
+                                        </td>
+                                        <td>
+                                            {{ customer.phone}}
+                                        </td>
+                                        <td>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-sm">
+                                                        <a class="btn btn-primary" href="{{customer.get_absolute_url}}">update </a>
+                                                    </div>
+                                                    <div class="col-sm">
+                                                        <a class="btn btn-danger" href="{{customer.get_delete_url}}">delete </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            
+        </div>
+
+
+</div>
+
+{% endblock content %}

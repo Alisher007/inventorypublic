@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a>
+                <span class="mx-2 mb-0">/</span>
+                <a href="{% url 'cart:summary' %}">Cart</a>
+                <span class="mx-2 mb-0">/</span>
+                <a href="{% url 'cart:checkout' %}">Checkout</a>
+                <span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Payment</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section">
+    <div class="container">
+        <div class="row my-5">
+            <h3>Payment due is {{order.get_total_payment_minus}}</h3>
+        </div>
+        <div class="row">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type='submit' class="btn btn-sm btn-primary buy-now">Proceed</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
